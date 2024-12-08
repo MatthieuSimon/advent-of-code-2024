@@ -1,0 +1,33 @@
+def main():
+    file=open("../input.txt",'r') 
+    data = file.read().splitlines()
+    content = []
+    for line in data:
+        content.append([])
+        for char in line:
+            content[-1].append(char)
+    antenna_to_pos = {}
+
+    for i, row in enumerate(content):
+        for j, value in enumerate(row):
+            if value != ".":
+                antenna_to_pos.setdefault(value, []).append((i, j))
+
+    for antenna in antenna_to_pos.keys():
+        for (x, y) in antenna_to_pos[antenna]:
+            for (i, j) in antenna_to_pos[antenna]:
+                gap = (x-i, y-j)
+                if gap[0] == 0 and gap[1] == 0:
+                    continue
+                antinode1 = (x+gap[0], y+gap[1])
+                antinode2 = (i-gap[0], j-gap[1])
+
+                if 0 <= antinode1[0] < len(content) and 0 <= antinode1[1] < len(content[0]):
+                    content[antinode1[0]][antinode1[1]] = "#"
+                if 0 <= antinode2[0] < len(content) and 0 <= antinode2[1] < len(content[0]):
+                    content[antinode2[0]][antinode2[1]] = "#"
+    res = ("\n".join(["".join(line) for line in content]))
+    print(res.count("#"))
+
+if __name__ == "__main__":
+    main()
